@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			body {
+				text-align: center;
+				margin: 0;
+			}
+			section {
+				width: 500px;
+				margin: 0 auto;
+			}
+			.box {
+				width: 300px;
+				height: 25px;
+				margin: 20px auto;
+			}
+			input {
+				float: left;
+				width: 100px;
+				box-sizing: border-box;
+			}
+			#imgs {
+				display: inline-block;
+				margin: 10px auto;
+				border: 1px solid #000;
+			}
+			#imgs span {
+				display: inline-block;
+				vertical-align: bottom;
+				margin-left: 2px;
+				margin-right: 2px;
+				width: 6px;
+				background-color: #000;
+				color: #fff;
+				font: 12px/12px "微软雅黑";
+			}
+			.details i {
+				font: 18px/30px "微软雅黑";
+			}
+		</style>
+	</head>
+	<body>
+		<section>
+			<div class="box">
+				<input type="text" name="" value="12345" id="arrays" placeholder="numbers"/>
+				<input type="text" name="" value="10000" id="times" placeholder="counts"/>
+				<input type="button" name="" value="random" id="confirms"/>
+			</div>
+			<table border="1" cellspacing="0" cellpadding="5" align="center" width="300">
+			</table>
+		</section>
+		<div id="imgs"></div>
+		<div class="details">
+			<i>Index:<em></em></i>
+			<i>Numbers:<em></em></i>
+			<i>Possibility:<em></em></i>
+		</div>
+	</body>
+	<script type="text/javascript">
+	var confirms = document.querySelector("#confirms");
+	var arrays = document.querySelector("#arrays");
+	var times = document.querySelector("#times");
+	var imgs = document.querySelector("#imgs");
+	var myDetails = document.querySelector(".details");
+	var myEms = myDetails.querySelectorAll("em");
+	confirms.onclick = function(){
+		var myTable = document.querySelector("table");
+		var str = [];
+		var mys = [];
+		for(var i = 0; i < parseInt(times.value); i++){
+			var arr = arrays.value.split('');
+			arr.sort(function(){
+				return Math.random() - .5;
+			})
+			str.push(arr.join(""));
+		}
+		str.sort();
+		var allPossibility = {};
+		for(var i = 0; i <str.length; i++){
+			var para = 0;
+			for(var s in allPossibility){
+				if(str[i] == s){
+					allPossibility[str[i]]++;
+					para++;
+				}
+			}
+			if(!para){
+				allPossibility[str[i]] = 1;
+			}
+		}
+		var strs = '<tr><th>Result</th><th>Times</th><th>Possibility</th></tr>';
+		var total = 0;
+		var allTimes = 0;
+		var index = 0;
+		var imgStr = '';
+		var det = [];
+		for(var s in allPossibility){
+			det[index] = [s,(allPossibility[s]/str.length*100).toFixed(4) + '%'];
+			index ++;	
+			allTimes += allPossibility[s];
+			total += allPossibility[s]/str.length*100;
+			strs += '<tr><th>'+ index + "—" + s +'</th><th>'+ allPossibility[s] +'</th><th>'+ (allPossibility[s]/str.length*100).toFixed(4) +'%</th></tr>';
+			imgStr += '<span style="height: '+ (allPossibility[s]/str.length*5000).toFixed(2) +'px;"></span>';
+		}
+		myTable.innerHTML = strs + '<tr><th>Total</th><th>'+ allTimes +'</th><th>'+ total.toFixed(4) +'%</th></tr>';
+		imgs.innerHTML = imgStr;
+		spans = document.getElementsByTagName("span");
+		for(var i = 0; i < spans.length; i++){
+			spans[i].index = i;
+			spans[i].onmouseover = function (){
+				this.style.backgroundColor = "lightcoral";
+				myDetails.style.display = "block";
+				myEms[0].innerHTML = this.index;
+				myEms[1].innerHTML = det[this.index][0];
+				myEms[2].innerHTML = det[this.index][1];
+			}
+			spans[i].onmouseout = function(){
+				this.style.backgroundColor = "#000";
+			}
+		}
+	}
+	</script>
+</html>
